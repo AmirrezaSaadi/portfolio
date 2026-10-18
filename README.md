@@ -1,7 +1,5 @@
 # Amirreza Saadi — Dev Portfolio
 
-Parsed from `AmirrezaSaadi.pdf` (Tabriz, backend developer — Go / C++ / PostgreSQL / Docker / Linux).
-
 ## Structure
 
 ```
