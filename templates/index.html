@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="darkness">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>{{.Name}} — {{.Role}} | Go • gRPC • MSSQL • Docker</title>
+<meta name="description" content="Portfolio of {{.Name}}, backend developer: Golang, gRPC, ASP.NET, MSSQL/PostgreSQL, Docker, Linux. Intern @ Motorsazan Tractorsazi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/style.css?v={{.AssetV}}">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+</head>
+<body>
+
+<!-- BACKGROUND FX LAYERS -->
+<canvas id="stars"></canvas>
+<div class="grid-overlay"></div>
+<div class="nebula nebula-a"></div><div class="nebula nebula-b"></div>
+<div class="scanlines"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div id="scrollProgress"></div>
+
+<!-- BOOT PRELOADER -->
+<div id="preloader">
+  <div class="boot-box">
+    <div class="boot-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span>boot — zsh ─ portfolio v3</span><span class="boot-skip mono">[ press any key to skip ]</span></div>
+    <div class="boot-body" id="bootLog"></div>
+    <div class="boot-bar"><div id="bootFill"></div></div>
+  </div>
+</div>
+
+<!-- COMMAND PALETTE (ctrl+k) -->
+<div id="paletteOverlay">
+  <div id="palette">
+    <div class="pal-head"><span class="p-neon">❯</span><input id="palInput" placeholder="type a command…  (goto, copy, resume)" autocomplete="off" spellcheck="false"><kbd>esc</kbd></div>
+    <div id="palList"></div>
+    <div class="pal-foot mono">↑↓ navigate · enter run · <b>ctrl+k</b> toggle · <b>/</b> terminal</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#top" class="logo"><span class="logo-prompt">~/</span>amirreza<span class="logo-blink">_</span></a>
+  <div class="nav-links">
+    <a href="#about"><span class="ln">01.</span>about</a>
+    <a href="#skills"><span class="ln">02.</span>skills</a>
+    <a href="#experience"><span class="ln">03.</span>xp</a>
+    <a href="#projects"><span class="ln">04.</span>projects</a>
+    <a href="#education"><span class="ln">05.</span>edu</a>
+    <a href="#contact"><span class="ln">06.</span>contact</a>
+    <button class="icon-btn" id="themeBtn" title="cycle theme (darkness / void)">◐</button>
+    <button class="icon-btn" id="paletteBtn" title="command palette (ctrl+k)">^K</button>
+    <a href="{{.Github}}" target="_blank" class="btn-gh">↗ github</a>
+  </div>
+  <div class="sys-status"><span class="pulse"></span><span id="navStatus">online</span><span class="nav-clock mono" id="navClock">--:--</span></div>
+  <button id="burger" aria-label="menu">☰</button>
+</nav>
+<div id="mobileMenu">
+  <a href="#about">about</a><a href="#skills">skills</a><a href="#experience">experience</a><a href="#projects">projects</a><a href="#education">edu</a><a href="#contact">contact</a>
+</div>
+
+<!-- floating easter egg: a compact >_ prompt that opens the real terminal -->
+<button id="toTerminalBtn" type="button" title="open the playground terminal" aria-label="open terminal">
+  <span class="ft-prompt">&gt;<span class="ft-us">_</span></span>
+</button>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div class="hero-left">
+      <div class="shell-line"><span class="sh-user">visitor@web</span>:<span class="sh-path">~</span>$ <span id="typedCmd">whoami --verbose</span><span class="caret"></span></div>
+      <p class="kicker">// HELLO WORLD, I AM <span class="kicker-tag">open_to_work: true</span></p>
+      <h1 class="glitch" data-text="{{.Name}}">{{.Name}}</h1>
+      <h2 class="role">&gt; <span id="typedRole"></span><span class="caret"></span></h2>
+      <p class="summary">
+        Backend developer crafting <b>scalable &amp; efficient systems</b> with
+        <span class="hl-neon">Golang</span>, <span class="hl">gRPC</span> &amp; <span class="hl-cy">PostgreSQL/MSSQL</span>.
+        Ex <b>Full-Stack intern @ Motorsazan Tractorsazi</b> — shipped production ASP.NET + MSSQL modules,
+        JWT-secured REST APIs, DevExpress UIs. Dockerized deploys on Linux.
+      </p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num"><span data-count="4">0</span>+</span><span class="stat-label">shipped<br>projects</span></div>
+        <div class="stat"><span class="stat-num" data-count="9">0</span><span class="stat-label">core<br>technologies</span></div>
+        <div class="stat"><span class="stat-num">16.35<small class="gpa-max">/20</small></span><span class="stat-label">university<br>GPA</span></div>
+        <div class="stat live"><span class="stat-num uptime" id="uptimeHero">0s</span><span class="stat-label">server<br>uptime ↑</span></div>
+      </div>
+      <!-- live sysmon widget -->
+      <div class="sysmon mono">
+        <div class="sysmon-head"><span>◉ sysmon — live</span><span id="sysmonClock">--:--:--</span></div>
+        <div class="sysmon-row"><span>cpu</span><div class="mini-bar"><div id="cpuBar"></div></div><span id="cpuTxt">--%</span></div>
+        <div class="sysmon-row"><span>mem</span><div class="mini-bar"><div id="memBar"></div></div><span id="memTxt">--%</span></div>
+        <div class="sysmon-row"><span>net</span><span id="pingTxt" class="ping">/api/health …</span></div>
+      </div>
+      <div class="hero-cta">
+        <a href="#projects" class="btn primary magnetic">./view_projects.sh</a>
+        <button class="btn ghost magnetic" id="copyEmailBtn">copy email</button>
+        <a href="/static/resume.pdf" target="_blank" class="btn ghost magnetic">wget resume.pdf (Persian)</a>
+      </div>
+      <div class="hero-meta mono">
+        <span>{{.Location}}</span><span>{{.University}}</span>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="terminal tilt float">
+        <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">amirreza@dev: ~/portfolio — zsh</span><span class="term-live">● live</span></div>
+        <div class="term-body" id="termBody">
+          <div><span class="p-neon">$</span> <span class="typed-term" id="termLine1">whoami --verbose</span></div>
+          <div class="term-out">Backend Developer — <span class="go-hl">Go</span> / C# / C++ / SQL</div>
+          <div class="term-out dim">ex-motorsazan intern</div>
+          <div><span class="p-neon">$</span> cat stack.json</div>
+<pre class="json"><code>{
+  <span class="k">"language"</span>: [<span class="s go-hl">"Golang"</span>, <span class="s">"C#"</span>, <span class="s">"C++"</span>, <span class="s">"Python"</span>],
+  <span class="k">"database"</span>: [<span class="s">"PostgreSQL"</span>, <span class="s">"MSSQL"</span>],
+  <span class="k">"backend"</span>: [<span class="s">"REST"</span>, <span class="s">"gRPC"</span>, <span class="s">"JWT"</span>, <span class="s">"Swagger"</span>],
+  <span class="k">"ops"</span>: [<span class="s">"Docker"</span>, <span class="s">"Linux"</span>],
+  <span class="k">"open_to_work"</span>: <span class="b">true</span>
+}</code></pre>
+          <div><span class="p-neon">$</span> <span id="termLine2"></span><span class="caret sm"></span></div>
+        </div>
+      </div>
+      <div class="profile-card tilt">
+        <div class="avatar">AS<span class="avatar-ring"></span></div>
+        <div>
+          <div class="pc-name">{{.Name}} <span class="verified">✔</span></div>
+          <div class="pc-handle">@AmirrezaSaadi • backend</div>
+          <div class="pc-sub">ex-motorsazan intern</div>
+        </div>
+        <a class="pc-btn" href="{{.Github}}" target="_blank">Follow</a>
+      </div>
+      <!-- git log mini card -->
+      <div class="gitlog mono tilt">
+        <div class="gitlog-head">$ git log --oneline -4</div>
+        <div><span class="gh">a1f9c2e</span> feat: grpc-user-validation microservice</div>
+        <div><span class="gh">77bd410</span> feat: security shift-module (mssql+devexpress)</div>
+        <div><span class="gh">e02c918</span> feat: lenslocked auth + bcrypt + rest</div>
+        <div><span class="gh">c55d0aa</span> wip: PHASE editor — unix raw mode</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MARQUEE -->
+  <div class="marquee"><div class="marquee-track" id="marqueeTrack"><span>GOLANG ✦ GRPC ✦ POSTGRESQL ✦ MSSQL ✦ ASP.NET ✦ DOCKER ✦ LINUX ✦ C# ✦ C++ ✦ REST API ✦ JWT ✦ SWAGGER ✦ BCRYPT ✦ MVC ✦ KOTLIN ✦ GIT ✦&nbsp;</span></div></div>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about" class="section reveal">
+    <div class="sec-head"><span class="sec-num">01.</span><h2>about<span class="ext">.go</span></h2><span class="sec-line"></span><span class="sec-file mono">package main</span></div>
+    <div class="about-grid">
+      <div class="code-window tilt">
+        <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">about.go — gofmt</span><button class="copy-btn mono" id="copyAboutBtn">copy</button></div>
+<pre class="code" id="aboutCode"><code><span class="kw">package</span> <span class="fn">main</span>
+
+<span class="kw">type</span> <span class="tp">Developer</span> <span class="kw">struct</span> {
+    Name     <span class="tp">string</span> <span class="tag">`json:"name"`</span>
+    Role     <span class="tp">string</span> <span class="tag">`json:"role"`</span>
+    Location <span class="tp">string</span> <span class="tag">`json:"location"`</span>
+    GPA      <span class="tp">float64</span> <span class="tag">`json:"gpa"`</span>
+}
+
+<span class="kw">func</span> <span class="fn">NewDev</span>() *Developer {
+    <span class="kw">return</span> &Developer{
+        Name:     <span class="s">"Amirreza Saadi"</span>,
+        Role:     <span class="s">"Backend Developer"</span>,
+        Location: <span class="s">"Tabriz, Iran"</span>,
+        GPA:      <span class="b">{{.GPA}}</span>,
+    }
+}
+
+<span class="c">// Industrial XP: Motorsazan Tractorsazi — full-stack
+// modules (ASP.NET MVC + MSSQL + DevExpress).
+// I design scalable systems, optimize queries,
+// ship Dockerized services on Linux.</span>
+<span class="kw">func</span> (d *Developer) <span class="fn">Passion</span>() <span class="tp">string</span> {
+    <span class="kw">return</span> <span class="s">"clean code + fast servers"</span>
+}</code></pre>
+      </div>
+      <div class="about-text">
+        <h3>Backend engineer who loves <span class="hl-neon">fast servers</span> &amp; clean architecture.</h3>
+        <p>Computer Engineering undergrad (Shahid Madani University, GPA <b>{{.GPA}}</b>) + <b>Full-Stack intern @ Motorsazan Tractorsazi</b> (industrial enterprise systems). Zero-to-one module ownership: DB design → API → UI, security validation, Swagger-tested services.</p>
+        <ul class="check-list">
+          <li><b>Advanced</b> relational DBs — PostgreSQL <i>&amp;</i> MSSQL, stored procedures, query &amp; server perf</li>
+          <li><b>Intermediate+</b> Go &amp; C++, C# / ASP.NET MVC / Web API, Docker, Linux ops</li>
+          <li><b>Auth &amp; APIs:</b> JWT access control, custom validation attributes, REST + gRPC/Protobuf, Swagger</li>
+          <li><b>Frontend (industrial):</b> DevExpress GridView (filter/pagination/live-numbering), service-bound ComboBox</li>
+          <li><b>English:</b> native-level (ILI Advanced — CEFR C2, 2022) • <b>Turkish:</b> native • <b>Persian:</b> native</li>
+          <li>Strong problem-solving under constraints, fast learner, multidisciplinary teamwork</li>
+        </ul>
+        <div class="id-grid mono">
+          <div><span class="dim">dob</span><br>{{.Birth}}</div>
+          <div><span class="dim">status</span><br>{{.Marital}} · {{.Military}}</div>
+          <div><span class="dim">based</span><br>{{.FullAddr}}</div>
+        </div>
+        <div class="lang-badges mono">
+          <span class="lang-tip" id="enBadge" tabindex="0" data-tip="ILI English certificate · Advanced (CEFR C2) · 2022">EN — Native<sup>✦</sup></span><span>TR — Native</span><span>FA — Native</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section id="skills" class="section reveal">
+    <div class="sec-head"><span class="sec-num">02.</span><h2>skills<span class="ext">.json</span></h2><span class="sec-line"></span><span class="mono dim">$ docker stats --skills</span></div>
+    <div class="skills-grid">
+      {{range .Skills}}
+      <div class="skill-card tilt">
+        <div class="skill-top"><span class="skill-icon" style="--c:{{.Color}}">{{.Icon}}</span>
+          <div><div class="skill-name">{{.Name}}</div><div class="skill-cmd mono">{{.Command}}</div><div class="skill-sub mono">{{.Sub}}</div></div>
+          <span class="skill-pct mono">{{.Level}}%</span>
+        </div>
+        <div class="bar"><div class="bar-fill" data-level="{{.Level}}" style="--c:{{.Color}}"></div></div>
+      </div>
+      {{end}}
+    </div>
+    <div class="stack-row mono">
+      <span class="chip">net/http</span><span class="chip">gRPC/protobuf</span><span class="chip">ASP.NET MVC</span><span class="chip">Web API</span><span class="chip">JWT</span><span class="chip">Swagger</span><span class="chip">stored-procedures</span><span class="chip">bcrypt</span><span class="chip">REST</span><span class="chip">MVC</span><span class="chip">DevExpress</span><span class="chip">Room/SQLite</span><span class="chip">Compose</span><span class="chip">Coroutines</span><span class="chip">git</span><span class="chip">bash</span>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience" class="section reveal">
+    <div class="sec-head"><span class="sec-num">03.</span><h2>experience<span class="ext">.log</span></h2><span class="sec-line"></span><span class="mono dim">$ docker ps --jobs</span></div>
+    {{range .Exp}}
+    <div class="xp-card tilt">
+      <div class="xp-top">
+        <div class="xp-logo">MT</div>
+        <div>
+          <h3>{{.Role}}</h3>
+          <div class="xp-co mono">{{.Company}} · {{.Location}}</div>
+        </div>
+        <span class="xp-period mono">{{.Period}}</span>
+      </div>
+      <div class="xp-stack mono">{{.Stack}}</div>
+      <ul class="xp-list">
+        {{range .Bullets}}<li>{{.}}</li>{{end}}
+      </ul>
+    </div>
+    {{end}}
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects" class="section reveal">
+    <div class="sec-head"><span class="sec-num">04.</span><h2>projects<span class="ext">/</span></h2><span class="sec-line"></span><a class="mono link" href="{{.Github}}" target="_blank">ls ~/github → view all ↗</a></div>
+    <div class="filter-row mono">
+      <button class="filter active" data-filter="all">all (5)</button>
+      <button class="filter" data-filter="backend">backend</button>
+      <button class="filter" data-filter="mobile">mobile</button>
+      <button class="filter" data-filter="systems">systems</button>
+    </div>
+    <div class="proj-grid" id="projGrid">
+      {{range .Projects}}
+      <article class="proj-card tilt" data-cat="{{.Filter}}">
+        <div class="proj-bar"><span class="proj-icon">{{.Icon}}</span><span class="proj-status mono {{.Status}}">● {{.Status}}</span><a class="proj-gh mono" href="{{.Link}}" target="_blank">↗ git</a></div>
+        <div class="proj-date mono">{{.Date}}</div>
+        <h3><a href="{{.Link}}" target="_blank">{{.Title}}</a></h3>
+        <p>{{.Description}}</p>
+        <div class="tags mono">{{range .Tags}}<span>#{{.}}</span>{{end}}</div>
+        <div class="proj-foot mono"><span><i class="lang-dot" style="background:{{.LangColor}}"></i>{{.Lang}}</span><span>{{.Stars}}</span></div>
+        <a class="proj-open" href="{{.Link}}" target="_blank">open repository →</a>
+      </article>
+      {{end}}
+      <a class="proj-card more" href="{{.Github}}" target="_blank" data-cat="all">
+        <div class="more-plus">+</div>
+        <h3>See more on GitHub</h3>
+        <p class="mono">@AmirrezaSaadi — experiments, forks &amp; work in progress.</p>
+        <span class="mono link">github.com/AmirrezaSaadi ↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ EDUCATION / TIMELINE ============ -->
+  <section id="education" class="section reveal">
+    <div class="sec-head"><span class="sec-num">05.</span><h2>education<span class="ext">.log</span></h2><span class="sec-line"></span><span class="mono dim">$ tail -f ~/edu.log</span></div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-date mono">Aug 2026 — Oct 2026 · Tabriz</div>
+          <h3>Full-Stack Intern — Motorsazan Tractorsazi Co.</h3>
+          <p>Enterprise industrial web systems (multi-layer Client/Api/Shared, ASP.NET MVC, C#, MSSQL). Full module ownership + DevExpress UI + JWT security + Swagger testing.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-date mono">2025 → ∞</div>
+          <h3>Open source &amp; freelance backend</h3>
+          <p>Image-sharing Go platform, gRPC user-auth microservice, terminal editor (C++ → Go rewrite), offline-first Android notes app. Open to backend roles &amp; freelance.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-date mono">2023 — present • Tabriz</div>
+          <h3>B.Sc. Computer Engineering — Shahid Madani University of Azerbaijan</h3>
+          <p>GPA <b>{{.GPA}} / 20</b> • Focus: backend systems, databases, operating systems. Building Go services, gRPC microservices &amp; Unix tooling alongside coursework.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-date mono">2022</div>
+          <h3>ILI English Certificate — Advanced (CEFR C2)</h3>
+          <p>Fluent technical English: docs, RFCs, code reviews. Native Persian and Turkish.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ API LIVE DOCS ============ -->
+  <section class="section reveal">
+    <div class="sec-head"><span class="sec-num">06.</span><h2>api<span class="ext">.live</span></h2><span class="sec-line"></span><span class="mono dim">this page is served by Go — try it</span></div>
+    <div class="api-grid">
+      <button class="api-btn mono" data-ep="/api/health">GET /api/health</button>
+      <button class="api-btn mono" data-ep="/api/skills">GET /api/skills</button>
+      <button class="api-btn mono" data-ep="/api/projects">GET /api/projects</button>
+      <button class="api-btn mono" data-ep="/api/experience">GET /api/experience</button>
+    </div>
+    <div class="code-window">
+      <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title" id="apiTitle">response — click an endpoint ↑</span><button class="copy-btn mono" id="copyApiBtn">copy</button></div>
+      <pre class="code"><code id="apiOut">$ curl -s localhost:8080/api/health | jq
+<span class="dim">// live JSON from the Go server…</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="section reveal">
+    <div class="sec-head"><span class="sec-num">07.</span><h2>contact<span class="ext">.sh</span></h2><span class="sec-line"></span><span class="mono dim">$ ./hire_me --fast</span></div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Let's build something <span class="hl-neon">fast</span>.</h3>
+        <p>My inbox is always open — backend roles, freelance APIs, or just geek talk about Go, gRPC &amp; Postgres.</p>
+        <a class="c-row" href="mailto:{{.Email}}"><span class="c-idx">01</span><span class="c-tag">[mail]</span><span>{{.Email}}</span></a>
+        <a class="c-row" href="tel:+989330148482"><span class="c-idx">02</span><span class="c-tag">[tel]</span><span>{{.Phone}}</span></a>
+        <div class="c-row"><span class="c-idx">03</span><span class="c-tag">[loc]</span><span>{{.FullAddr}}</span></div>
+        <a class="c-row" href="{{.Github}}" target="_blank"><span class="c-idx">04</span><span class="c-tag">[git]</span><span>github.com/AmirrezaSaadi</span></a>
+        <a class="c-row" href="/static/resume.pdf" target="_blank"><span class="c-idx">05</span><span class="c-tag">[cv]</span><span>resume.pdf — Persian version</span></a>
+        <div class="server-pill mono" id="serverPill">● probing server…</div>
+        <div class="c-await mono"><span class="p-neon">&gt;</span> awaiting transmission<span class="caret sm"></span></div>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <label>name<input name="name" required placeholder="ada_lovelace"></label>
+        <label>email<input name="email" type="email" required placeholder="ada@analytical.engine"></label>
+        <label>message<textarea name="message" rows="5" required placeholder="$ echo 'Hi Amirreza, let's work together…'"></textarea></label>
+        <button class="btn primary" type="submit" id="sendBtn">send --message</button>
+        <p class="form-status mono" id="formStatus"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ INTERACTIVE TERMINAL ============ -->
+  <section class="section reveal" id="playground">
+    <div class="terminal big">
+      <div class="term-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="term-title">playground — try: help | whoami | skills | xp | projects | contact | meteors</span></div>
+      <div class="term-body">
+        <div id="playOut" class="play-out"><div><span class="p-neon">visitor@web:~$</span> type a command below -- try <b>help</b></div></div>
+        <div class="play-in"><span class="p-neon">visitor@web:~$</span><input id="playInput" autocomplete="off" spellcheck="false" placeholder="help"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="statusbar mono">
+    <span class="sb-mode">NORMAL</span>
+    <span>© {{.Year}} {{.Name}}</span>
+    <span class="sb-hide">go net/http · no frameworks</span>
+    <span>uptime: <b id="uptimeFoot">…</b></span>
+    <span><a href="/api/health" target="_blank">/api/health</a></span>
+    <span class="sb-right">utf-8 · unix · <span id="footClock">--:--</span> · <a href="#top">↑ top</a></span>
+  </div>
+</footer>
+
+<div id="toast" class="mono"></div>
+
+<script src="/static/js/main.js?v={{.AssetV}}"></script>
+</body>
+</html>
