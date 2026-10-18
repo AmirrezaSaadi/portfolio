@@ -1,6 +1,4 @@
-# Amirreza Saadi — Dev Portfolio (Go)
-
-Backend-style portfolio website built with **Go `net/http`** + vanilla CSS/JS. No frameworks.
+# Amirreza Saadi — Dev Portfolio
 
 Parsed from `AmirrezaSaadi.pdf` (Tabriz, backend developer — Go / C++ / PostgreSQL / Docker / Linux).
 
