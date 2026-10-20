@@ -55,14 +55,13 @@ docker run -p 8080:8080 portfolio
 - Boot-sequence preloader, matrix-rain canvas, cursor glow, grid overlay
 - Glitch name, typed roles (`Backend Developer / Golang Engineer / …`), live fake shell
 - Animated skill bars, counters, tilt cards, scroll reveal
-- Real Go template data (name, email, GPA 16.28, GitHub links from resume)
+- Real Go template data
 - Interactive playground terminal: try `help`, `whoami`, `skills`, `go version`
 - Contact form POSTs to Go backend; server uptime shown in hero + footer
 - Fully responsive + mobile menu
 
-## Contact (from resume)
+## Contact
 
 - Email: amirrezasaadi0509@gmail.com
-- Phone: +98 933 014 8482
 - GitHub: https://github.com/AmirrezaSaadi
 - Location: Tabriz, East Azerbaijan, Iran
